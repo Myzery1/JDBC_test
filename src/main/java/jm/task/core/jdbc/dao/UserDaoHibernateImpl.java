@@ -11,13 +11,13 @@ import static jm.task.core.jdbc.util.Util.getSessionFactory;
 
 public class UserDaoHibernateImpl implements UserDao {
 
-    Session session;
+    private Session session;
 
     public UserDaoHibernateImpl() {
 
     }
 
-    private static final String sql = "CREATE TABLE IF NOT EXISTS users (\n" +
+    private static final String SQL = "CREATE TABLE IF NOT EXISTS users (\n" +
             "        ID BIGINT NOT NULL AUTO_INCREMENT,\n" +
             "        name CHAR(45) NOT NULL,\n" +
             "        lastName CHAR(45) NOT NULL,\n" +
@@ -29,7 +29,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void createUsersTable() {
         try (Session session = getSessionFactory().openSession()){
             session.beginTransaction();
-            session.createNativeQuery(sql, User.class).executeUpdate();
+            session.createNativeQuery(SQL, User.class).executeUpdate();
             session.getTransaction().commit();
             System.out.println("Table was created");
         } catch (Exception e) {
