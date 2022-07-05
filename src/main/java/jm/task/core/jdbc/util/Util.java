@@ -12,14 +12,14 @@ import java.util.Properties;
 
 public class Util {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/newtest";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/newbase";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "aa";
 
-    private static SessionFactory getSessionFactory = buildSessionFactory();
+    private static SessionFactory sessionFactory;
 
-    private static SessionFactory buildSessionFactory() {
-        if (getSessionFactory == null) {
+    public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
             try {
                 Configuration configuration = new Configuration();
                 Properties settings = new Properties();
@@ -29,7 +29,6 @@ public class Util {
                 settings.put(Environment.PASS, PASSWORD);
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQLDialect");
                 settings.put(Environment.SHOW_SQL, "true");
-                settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
 
                 configuration.setProperties(settings);
                 configuration.addAnnotatedClass(User.class);
@@ -37,17 +36,13 @@ public class Util {
                 StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();
 
-                getSessionFactory = configuration.buildSessionFactory(serviceRegistry);
+                sessionFactory = configuration.buildSessionFactory(serviceRegistry);
             } catch (Exception e) {
                 System.err.println("Connection problem");
                 e.printStackTrace();
             }
         }
-        return getSessionFactory;
-    }
-
-    public static SessionFactory getSessionFactory() {
-        return getSessionFactory;
+        return sessionFactory;
     }
 }
 
